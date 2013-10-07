@@ -1,0 +1,27 @@
+--- Dc11SchemaArticleAdapter.inc.php	2013-03-05 00:53:15.000000000 +0100
++++ Dc11SchemaArticleAdapter.inc.php.new	2013-09-09 16:23:53.000000000 +0200
+@@ -200,20 +200,13 @@
+ 			$dc11Description->addStatement('dc:language', strip_tags($articleLanguage));
+ 		}
+ 
+-		// Relation
+-		// full text URLs
++		// identifier with full-text download urls - used for harvesting from magazzinidigitali
+ 		foreach ($galleys as $galley) {
+-			$relation = Request::url($journal->getPath(), 'article', 'view', array($article->getBestArticleId($journal), $galley->getBestGalleyId($journal)));
+-			$dc11Description->addStatement('dc:relation', $relation);
++			$fulltext = Request::url($journal->getPath(), 'article', 'download', array($article->getBestArticleId($journal), $galley->getBestGalleyId($journal)));
++			$dc11Description->addStatement('dc:identifier', $fulltext);
+ 			unset($relation);
+ 		}
+-		// supp file URLs
+-		foreach ($suppFiles as $suppFile) {
+-			$relation = Request::url($journal->getPath(), 'article', 'downloadSuppFile', array($article->getBestArticleId($journal), $suppFile->getBestSuppFileId($journal)));
+-			$dc11Description->addStatement('dc:relation', $relation);
+-			unset($relation);
+-		}
+-
++	
+ 		// Public identifiers
+ 		$pubIdPlugins = (array) PluginRegistry::loadCategory('pubIds', true, $journal->getId());
+ 		foreach ($pubIdPlugins as $pubIdPlugin) {

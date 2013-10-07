@@ -1,0 +1,25 @@
+*** OAIMetadataFormat_DC.inc.php.original	Mon Feb 20 17:20:56 2012
+--- OAIMetadataFormat_DC.inc.php	Mon Feb 20 17:20:39 2012
+***************
+*** 99,105 ****
+  			$this->formatElement('date', date('Y-m-d', strtotime($issue->getDatePublished()))) .
+  			$this->formatElement('type', $types, true) .
+  			$this->formatElement('format', $formats) .
+! 			$this->formatElement('identifier', Request::url($journal->getPath(), 'article', 'view', array($article->getBestArticleId()))) .
+  			(($doi = $article->getDOI())?$this->formatElement('identifier', $doi, false, array('xsi:type' => 'dcterms:DOI')):'') .
+  			$this->formatElement('source', $sources, true) .
+  			$this->formatElement('language', strip_tags($article->getLanguage())) .
+--- 99,111 ----
+  			$this->formatElement('date', date('Y-m-d', strtotime($issue->getDatePublished()))) .
+  			$this->formatElement('type', $types, true) .
+  			$this->formatElement('format', $formats) .
+! 			$this->formatElement('identifier', Request::url($journal->getPath(), 'article', 'view', array($article->getBestArticleId()))) ;
+! 			
+! 			foreach ($article->getGalleys() as $galley) {
+! 			$response .= $this->formatElement('identifier', Request::url($journal->getPath(), 'article', 'download', array($article->getBestArticleId(),$galley->getId())));
+! 			}; 
+! 			
+! 			$response .=
+  			(($doi = $article->getDOI())?$this->formatElement('identifier', $doi, false, array('xsi:type' => 'dcterms:DOI')):'') .
+  			$this->formatElement('source', $sources, true) .
+  			$this->formatElement('language', strip_tags($article->getLanguage())) .
